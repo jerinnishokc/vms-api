@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using vms_api.DTOs;
 using vms_api.Models;
 
 namespace vms_api.Controllers
@@ -28,7 +29,28 @@ namespace vms_api.Controllers
             return await _context.Vehicle.ToListAsync();
         }
 
-        // GET: api/Vehicles/5
+        // GET: api/Vehicles/5        
+        [HttpGet("vendorVehicles/{vendorId}")]
+        public async Task<ActionResult<List<Vehicle>>> GetVendorVehicle(string vendorId)
+        {
+            //var vehicle = await _context.Vehicle.FindAsync();
+            var vehicles = await _context.Vehicle.ToListAsync();
+            List<Vehicle> vendorVehicles = new List<Vehicle>();
+
+            foreach (var item in vehicles)
+            {
+                if (item.Vendor == vendorId) {
+                    vendorVehicles.Add(item);
+                }
+            }
+
+            if (vendorVehicles == null)
+            {
+                return NotFound();
+            }
+
+            return vendorVehicles;
+        }
         [HttpGet("{id}")]
         public async Task<ActionResult<Vehicle>> GetVehicle(int id)
         {

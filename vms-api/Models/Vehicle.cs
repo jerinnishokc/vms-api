@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace vms_api.Models
 {
@@ -10,5 +9,7 @@ namespace vms_api.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public string Company { get; set; }
+        public string Vendor { get; set; }
+        public string BookingStatus { get; set; }
     }
 }

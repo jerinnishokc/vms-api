@@ -30,12 +30,19 @@ namespace vms_api.Models
         {
             modelBuilder.Entity<Vehicle>(entity =>
             {
-                entity.HasKey(e => e.VehId)
-                    .HasName("PK__Vehicle__9D15D3F99A70F596");
-
                 entity.ToTable("Vehicle", "vms");
 
-                entity.Property(e => e.VehId).HasColumnName("veh_id");
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.BookingStatus)
+                    .IsRequired()
+                    .HasColumnName("booking_status")
+                    .HasMaxLength(1)
+                    .IsUnicode(false)
+                    .IsFixedLength();
 
                 entity.Property(e => e.Company)
                     .IsRequired()
@@ -43,15 +50,19 @@ namespace vms_api.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Id)
-                    .IsRequired()
-                    .HasColumnName("id")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnName("name")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.VehId)
+                    .HasColumnName("veh_id")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Vendor)
+                    .IsRequired()
+                    .HasColumnName("vendor")
                     .HasMaxLength(100)
                     .IsUnicode(false);
             });
