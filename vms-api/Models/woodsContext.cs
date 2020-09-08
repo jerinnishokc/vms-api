@@ -30,10 +30,18 @@ namespace vms_api.Models
         {
             modelBuilder.Entity<Vehicle>(entity =>
             {
+                entity.HasKey(e => e.Uid)
+                    .HasName("PK__Vehicle__DD7012641435F1A2");
+
                 entity.ToTable("Vehicle", "vms");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
+                entity.Property(e => e.Uid)
+                    .HasColumnName("uid")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.BookedUserName)
+                    .HasColumnName("booked_user_name")
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -47,7 +55,8 @@ namespace vms_api.Models
                     .HasColumnName("booking_status")
                     .HasMaxLength(1)
                     .IsUnicode(false)
-                    .IsFixedLength();
+                    .IsFixedLength()
+                    .HasDefaultValueSql("('N')");
 
                 entity.Property(e => e.Company)
                     .IsRequired()
@@ -55,19 +64,35 @@ namespace vms_api.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedOnAdd();
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnName("name")
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.VehId)
-                    .HasColumnName("veh_id")
-                    .ValueGeneratedOnAdd();
+                entity.Property(e => e.Price)
+                    .HasColumnName("price")
+                    .HasColumnType("money");
 
-                entity.Property(e => e.Vendor)
+                entity.Property(e => e.RegId)
                     .IsRequired()
-                    .HasColumnName("vendor")
+                    .HasColumnName("reg_id")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.VendorId)
+                    .IsRequired()
+                    .HasColumnName("vendor_id")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.VendorName)
+                    .IsRequired()
+                    .HasColumnName("vendor_name")
                     .HasMaxLength(100)
                     .IsUnicode(false);
             });

@@ -29,7 +29,29 @@ namespace vms_api.Controllers
             return await _context.Vehicle.ToListAsync();
         }
 
-        // GET: api/Vehicles/5        
+        [HttpGet("availableVehicles")]
+        public async Task<ActionResult<List<Vehicle>>> GetVehicles()
+        {
+            var vehicles = await _context.Vehicle.ToListAsync();
+            List<Vehicle> vendorVehicles = new List<Vehicle>();
+
+            foreach (var item in vehicles)
+            {
+                if (item.BookingStatus != "Y")
+                {
+                    vendorVehicles.Add(item);
+                }
+            }
+
+            if (vendorVehicles == null)
+            {
+                return NotFound();
+            }
+
+            //Returns available vehicles - Does not return already booked vehicles
+            return vendorVehicles;
+        }
+
         [HttpGet("vendorVehicles/{vendorId}")]
         public async Task<ActionResult<List<Vehicle>>> GetVendorVehicle(string vendorId)
         {
@@ -39,7 +61,7 @@ namespace vms_api.Controllers
 
             foreach (var item in vehicles)
             {
-                if (item.Vendor == vendorId) {
+                if (item.VendorId == vendorId) {
                     vendorVehicles.Add(item);
                 }
             }
@@ -51,6 +73,8 @@ namespace vms_api.Controllers
 
             return vendorVehicles;
         }
+
+        // GET: api/Vehicles/5      
         [HttpGet("{id}")]
         public async Task<ActionResult<Vehicle>> GetVehicle(int id)
         {
@@ -68,9 +92,9 @@ namespace vms_api.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutVehicle(int id, Vehicle vehicle)
+        public async Task<IActionResult> PutVehicle(string id, Vehicle vehicle)
         {
-            if (id != vehicle.VehId)
+            if (id != vehicle.Uid)
             {
                 return BadRequest();
             }
@@ -100,12 +124,22 @@ namespace vms_api.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Vehicle>> PostVehicle(Vehicle vehicle)
+        public async Task<ActionResult<Vehicle>> PostVehicle(VehicleDTO vehicleDTO)
         {
+            var vehicle = new Vehicle {
+                RegId = vehicleDTO.RegId,
+                Uid = vehicleDTO.Uid,
+                Name = vehicleDTO.Name,
+                Company = vehicleDTO.Company,
+                Price = Convert.ToDecimal(vehicleDTO.Price),
+                VendorId = vehicleDTO.VendorId,
+                VendorName = vehicleDTO.VendorName
+            };
+
             _context.Vehicle.Add(vehicle);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetVehicle", new { id = vehicle.VehId }, vehicle);
+            return CreatedAtAction("GetVehicle", new { id = vehicle.Uid }, vehicle);
         }
 
         // DELETE: api/Vehicles/5
@@ -124,9 +158,9 @@ namespace vms_api.Controllers
             return vehicle;
         }
 
-        private bool VehicleExists(int id)
+        private bool VehicleExists(string id)
         {
-            return _context.Vehicle.Any(e => e.VehId == id);
+            return _context.Vehicle.Any(e => e.Uid == id);
         }
     }
 }
