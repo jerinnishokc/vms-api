@@ -11,5 +11,6 @@ namespace vms_api.Models
         public string Company { get; set; }
         public string Vendor { get; set; }
         public string BookingStatus { get; set; }
+        public string BookedUserUid { get; set; }
     }
 }

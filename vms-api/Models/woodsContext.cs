@@ -37,6 +37,11 @@ namespace vms_api.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.BookedUserUid)
+                    .HasColumnName("booked_user_uid")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.BookingStatus)
                     .IsRequired()
                     .HasColumnName("booking_status")
